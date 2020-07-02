@@ -5,7 +5,8 @@ import { Form } from '@unform/web';
 
 import { FiMail, FiLock, FiLogIn } from 'react-icons/fi';
 
-import { useAuth } from '../../hooks/AuthContext';
+import { useToast } from '../../hooks/toast';
+import { useAuth } from '../../hooks/auth';
 import getValidationErrors from '../../utils/getValidationErrors';
 
 import logoImg from '../../assets/logo.svg';
@@ -23,6 +24,7 @@ const SignIn: FunctionComponent = () => {
   const formRef = useRef<FormHandles>(null);
 
   const { signIn } = useAuth();
+  const { addToast } = useToast();
 
   const handleSubmit = useCallback(
     async (data: SignInFormData) => {
@@ -40,7 +42,7 @@ const SignIn: FunctionComponent = () => {
           abortEarly: false,
         });
 
-        signIn({
+        await signIn({
           email: data.email,
           password: data.password,
         });
@@ -50,9 +52,11 @@ const SignIn: FunctionComponent = () => {
 
           formRef.current?.setErrors(errors);
         }
+
+        addToast();
       }
     },
-    [signIn],
+    [signIn, addToast],
   );
 
   return (

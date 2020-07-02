@@ -3,6 +3,7 @@ import React, {
   FunctionComponent,
   useState,
   useCallback,
+  useContext,
 } from 'react';
 import api from '../services/api';
 
@@ -21,9 +22,7 @@ interface AuthContextData {
   signIn(credentials: SignInCredential): Promise<void>;
 }
 
-export const AuthContext = createContext<AuthContextData>(
-  {} as AuthContextData,
-);
+const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
 export const AuthProvider: FunctionComponent = ({ children }) => {
   const [data, setData] = useState<AuthState>(() => {
@@ -60,3 +59,13 @@ export const AuthProvider: FunctionComponent = ({ children }) => {
     </AuthContext.Provider>
   );
 };
+
+export function useAuth(): AuthContextData {
+  const context = useContext(AuthContext);
+
+  if (!context) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+
+  return context;
+}

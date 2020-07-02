@@ -57,6 +57,7 @@ const Input: FunctionComponent<InputProps> = ({
         ref={inputRef}
         {...rest}
       />
+      {error}
     </Container>
   );
 };

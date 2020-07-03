@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useRef, useCallback } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import * as Yup from 'yup';
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
@@ -23,6 +23,7 @@ interface SignInFormData {
 
 const SignIn: FunctionComponent = () => {
   const formRef = useRef<FormHandles>(null);
+  const history = useHistory();
 
   const { signIn } = useAuth();
   const { addToast } = useToast();
@@ -47,6 +48,8 @@ const SignIn: FunctionComponent = () => {
           email: data.email,
           password: data.password,
         });
+
+        history.push('/dashboard');
       } catch (err) {
         if (err instanceof Yup.ValidationError) {
           const errors = getValidationErrors(err);
@@ -63,7 +66,7 @@ const SignIn: FunctionComponent = () => {
         });
       }
     },
-    [signIn, addToast],
+    [signIn, addToast, history],
   );
 
   return (

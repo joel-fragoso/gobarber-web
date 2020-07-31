@@ -1,4 +1,10 @@
-import React, { FunctionComponent, useState, useCallback } from 'react';
+import React, {
+  FunctionComponent,
+  useState,
+  useCallback,
+  useEffect,
+  useMemo,
+} from 'react';
 import DayPicker, { DayModifiers } from 'react-day-picker';
 import { FiPower, FiClock } from 'react-icons/fi';
 
@@ -19,20 +25,60 @@ import {
   Appointment,
   Calendar,
 } from './styles';
+import api from '../../services/api';
+
+interface MonthAvailabilityItem {
+  day: number;
+  available: boolean;
+}
 
 const Dashboard: FunctionComponent = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
 
+  const [currentMonth, setCurrentMonth] = useState(new Date());
+
+  const [monthAvailability, setMonthAvailability] = useState<
+    MonthAvailabilityItem[]
+  >([]);
+
   const { user, signOut } = useAuth();
 
-  const handleDateChange = useCallback(
-    async (day: Date, modifiers: DayModifiers) => {
-      if (modifiers.available) {
-        setSelectedDate(day);
-      }
-    },
-    [],
-  );
+  useEffect(() => {
+    api
+      .get(`/providers/${user.id}/month-availability`, {
+        params: {
+          year: currentMonth.getFullYear(),
+          month: currentMonth.getMonth() + 1,
+        },
+      })
+      .then(response => {
+        setMonthAvailability(response.data);
+      });
+  }, [currentMonth, user.id]);
+
+  const handleDateChange = useCallback((day: Date, modifiers: DayModifiers) => {
+    if (modifiers.available) {
+      setSelectedDate(day);
+    }
+  }, []);
+
+  const handleMonthChange = useCallback((month: Date) => {
+    setCurrentMonth(month);
+  }, []);
+
+  const disabledDays = useMemo(() => {
+    const dates = monthAvailability
+      .filter(monthDay => monthDay.available === false)
+      .map(monthDay => {
+        const year = currentMonth.getFullYear();
+
+        const month = currentMonth.getMonth();
+
+        return new Date(year, month, monthDay.day);
+      });
+
+    return dates;
+  }, [currentMonth, monthAvailability]);
 
   return (
     <Container>
@@ -138,7 +184,8 @@ const Dashboard: FunctionComponent = () => {
             fromMonth={new Date()}
             modifiers={{ available: { daysOfWeek: [1, 2, 3, 4, 5] } }}
             onDayClick={handleDateChange}
-            disabledDays={[{ daysOfWeek: [0, 6] }]}
+            disabledDays={[{ daysOfWeek: [0, 6] }, ...disabledDays]}
+            onMonthChange={handleMonthChange}
             selectedDays={selectedDate}
             months={[
               'Janeiro',

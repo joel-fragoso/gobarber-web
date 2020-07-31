@@ -37,6 +37,8 @@ export const AuthProvider: FunctionComponent = ({ children }) => {
     const user = localStorage.getItem('@GoBarber:user');
 
     if (token && user) {
+      api.defaults.headers.Authorization = `Bearer ${token}`;
+
       return { token, user: JSON.parse(user) };
     }
 
@@ -53,6 +55,8 @@ export const AuthProvider: FunctionComponent = ({ children }) => {
 
     localStorage.setItem('@GoBarber:token', token);
     localStorage.setItem('@GoBarber:user', JSON.stringify(user));
+
+    api.defaults.headers.Authorization = `Bearer ${token}`;
 
     setData({
       token,

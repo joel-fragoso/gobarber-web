@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, useState } from 'react';
 import { FiPower, FiClock } from 'react-icons/fi';
 
 import logoImg from '../../assets/logo.svg';
@@ -12,10 +12,14 @@ import {
   Content,
   Schedule,
   NextAppointment,
+  Section,
+  Appointment,
   Calendar,
 } from './styles';
 
 const Dashboard: FunctionComponent = () => {
+  const [selectedDate, setSelectedDate] = useState(new Date());
+
   const { user, signOut } = useAuth();
 
   return (
@@ -57,6 +61,64 @@ const Dashboard: FunctionComponent = () => {
               </span>
             </div>
           </NextAppointment>
+          <Section>
+            <strong>Manhã</strong>
+            <Appointment>
+              <span>
+                <FiClock />
+                08:00
+              </span>
+              <div>
+                <img
+                  src="https://avatars2.githubusercontent.com/u/20667377?v=4"
+                  alt="Joel Fragoso"
+                />
+                <strong>Joel Fragoso</strong>
+              </div>
+            </Appointment>
+            <Appointment>
+              <span>
+                <FiClock />
+                08:00
+              </span>
+              <div>
+                <img
+                  src="https://avatars2.githubusercontent.com/u/20667377?v=4"
+                  alt="Joel Fragoso"
+                />
+                <strong>Joel Fragoso</strong>
+              </div>
+            </Appointment>
+          </Section>
+          <Section>
+            <strong>Tarde</strong>
+            <Appointment>
+              <span>
+                <FiClock />
+                08:00
+              </span>
+              <div>
+                <img
+                  src="https://avatars2.githubusercontent.com/u/20667377?v=4"
+                  alt="Joel Fragoso"
+                />
+                <strong>Joel Fragoso</strong>
+              </div>
+            </Appointment>
+            <Appointment>
+              <span>
+                <FiClock />
+                08:00
+              </span>
+              <div>
+                <img
+                  src="https://avatars2.githubusercontent.com/u/20667377?v=4"
+                  alt="Joel Fragoso"
+                />
+                <strong>Joel Fragoso</strong>
+              </div>
+            </Appointment>
+          </Section>
         </Schedule>
         <Calendar />
       </Content>

@@ -15,11 +15,13 @@ import { Container, Error } from './styles';
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   name: string;
+  containerStyle?: object;
   icon?: ComponentType<IconBaseProps>;
 }
 
 const Input: FunctionComponent<InputProps> = ({
   name,
+  containerStyle = {},
   icon: Icon,
   ...rest
 }) => {
@@ -49,7 +51,12 @@ const Input: FunctionComponent<InputProps> = ({
   }, []);
 
   return (
-    <Container isErrored={!!error} isFocused={isFocused} isFilled={isFilled}>
+    <Container
+      style={containerStyle}
+      isErrored={!!error}
+      isFocused={isFocused}
+      isFilled={isFilled}
+    >
       {Icon && <Icon size={20} />}
       <input
         onFocus={handleInputFocus}

@@ -56,6 +56,7 @@ const Input: FunctionComponent<InputProps> = ({
       isErrored={!!error}
       isFocused={isFocused}
       isFilled={isFilled}
+      data-testid="input-container"
     >
       {Icon && <Icon size={20} />}
       <input
